@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:widget_practice/model/todo.dart';
 import 'package:widget_practice/page/edit_todo_page.dart';
@@ -78,6 +79,10 @@ class TodoWidget extends StatelessWidget {
                       )
                   ],
                 ),
+              ),
+              Text(
+                DateFormat('M月d日').format(todo.createdTime),
+                style: TextStyle(fontSize: 10),
               )
             ],
           ),
