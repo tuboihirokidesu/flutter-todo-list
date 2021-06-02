@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:widget_practice/model/todo.dart';
 
 class TodosProvider extends ChangeNotifier {
@@ -33,3 +34,6 @@ class TodosProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+final todosProvider =
+    ChangeNotifierProvider<TodosProvider>((ref) => TodosProvider());

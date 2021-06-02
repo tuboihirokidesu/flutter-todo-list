@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:widget_practice/model/todo.dart';
 import 'package:widget_practice/page/edit_todo_page.dart';
 import 'package:widget_practice/provider/todos.dart';
 import 'package:widget_practice/provider/utils.dart';
 
-class TodoWidget extends StatelessWidget {
+class TodoWidget extends ConsumerWidget {
   final Todo todo;
   const TodoWidget({Key key, this.todo}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
+    final todos = watch(todosProvider);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Slidable(
@@ -30,15 +32,16 @@ class TodoWidget extends StatelessWidget {
             IconSlideAction(
               color: Colors.red,
               caption: 'Delete',
-              onTap: () => deleteTodo(context, todo),
+              onTap: () => deleteTodo(context, todo, todos),
               icon: Icons.delete,
             )
           ],
-          child: buildTodo(context)),
+          child: buildTodo(context, todos)),
     );
   }
 
-  Widget buildTodo(BuildContext context) => GestureDetector(
+  Widget buildTodo(BuildContext context, TodosProvider todos) =>
+      GestureDetector(
         onTap: () => editTodo(context, todo),
         child: Container(
           color: Colors.white,
@@ -48,12 +51,15 @@ class TodoWidget extends StatelessWidget {
               Checkbox(
                   value: todo.isDone,
                   onChanged: (_) {
-                    final provider =
-                        Provider.of<TodosProvider>(context, listen: false);
-                    final isDone = provider.toggleTodoStatus(todo);
+                    // final provider =
+                    //     Provider.of<TodosProvider>(context, listen: false);
+                    // final isDone = provider.toggleTodoStatus(todo);
 
                     Utils.showSnackBar(
-                        context, isDone ? 'Completed' : 'not Completed');
+                        context,
+                        todos.toggleTodoStatus(todo)
+                            ? 'Completed'
+                            : 'not Completed');
                   }),
               const SizedBox(
                 width: 20,
@@ -89,9 +95,10 @@ class TodoWidget extends StatelessWidget {
         ),
       );
 
-  void deleteTodo(BuildContext context, Todo todo) {
-    final provider = Provider.of<TodosProvider>(context, listen: false);
-    provider.removeTodo(todo);
+  void deleteTodo(BuildContext context, Todo todo, TodosProvider todos) {
+    // final provider = Provider.of<TodosProvider>(context, listen: false);
+    // provider.removeTodo(todo);
+    todos.removeTodo(todo);
 
     Utils.showSnackBar(context, 'Deleted the task');
   }

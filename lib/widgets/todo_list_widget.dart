@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:widget_practice/provider/todos.dart';
 import 'package:widget_practice/widgets/todo_widget.dart';
 
-class TodoListWidget extends StatelessWidget {
+class TodoListWidget extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final provider = Provider.of<TodosProvider>(context);
-    final todos = provider.todos;
+  Widget build(BuildContext context, ScopedReader watch) {
+    final todos = watch(todosProvider);
 
-    return todos.isEmpty
+    return todos.todos.isEmpty
         ? Center(
             child: Text(
               'no todo',
@@ -22,9 +21,9 @@ class TodoListWidget extends StatelessWidget {
             separatorBuilder: (context, index) => Container(
               height: 8,
             ),
-            itemCount: todos.length,
+            itemCount: todos.todos.length,
             itemBuilder: (context, index) {
-              final todo = todos[index];
+              final todo = todos.todos[index];
 
               return TodoWidget(
                 todo: todo,

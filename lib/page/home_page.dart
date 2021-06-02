@@ -48,7 +48,8 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.black,
         onPressed: () => showDialog(
           context: context,
-          barrierDismissible: false,
+          barrierDismissible:
+              false, //barrierDismissible はダイアログ表示時の背景をタップしたときにダイアログを閉じてよいかどうか
           builder: (context) => AddTodoDialogWidget(),
         ),
         child: Icon(Icons.add),

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:widget_practice/provider/todos.dart';
 import 'package:widget_practice/widgets/todo_widget.dart';
 
-class CompletedTodoList extends StatelessWidget {
+class CompletedTodoList extends ConsumerWidget {
   const CompletedTodoList({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final provider = Provider.of<TodosProvider>(context);
-    final todos = provider.todoCompleted;
-
-    return todos.isEmpty
+  Widget build(BuildContext context, ScopedReader watch) {
+    final todosComplete = watch(todosProvider);
+    return todosComplete.todoCompleted.isEmpty
         ? Center(
             child: Text(
               'no Completed todo',
@@ -24,9 +22,9 @@ class CompletedTodoList extends StatelessWidget {
             separatorBuilder: (context, index) => Container(
               height: 8,
             ),
-            itemCount: todos.length,
+            itemCount: todosComplete.todoCompleted.length,
             itemBuilder: (context, index) {
-              final todo = todos[index];
+              final todo = todosComplete.todoCompleted[index];
 
               return TodoWidget(
                 todo: todo,

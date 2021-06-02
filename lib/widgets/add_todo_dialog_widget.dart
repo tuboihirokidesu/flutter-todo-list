@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:provider/provider.dart';
 import 'package:widget_practice/model/todo.dart';
 import 'package:widget_practice/provider/todos.dart';
 import 'package:widget_practice/widgets/todo_form_widget.dart';
@@ -33,12 +34,17 @@ class _AddTodoDialogWidgetState extends State<AddTodoDialogWidget> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  TodoFormWidget(
-                    onChangedTitle: (title) =>
-                        setState(() => this.title = title),
-                    onChangedDescription: (description) =>
-                        setState(() => this.description = description),
-                    onSavedTodo: addTodo,
+                  Consumer(
+                    builder: (context, watch, child) {
+                      final todos = watch(todosProvider);
+                      return TodoFormWidget(
+                        onChangedTitle: (title) =>
+                            setState(() => this.title = title),
+                        onChangedDescription: (description) =>
+                            setState(() => this.description = description),
+                        onSavedTodo: () => addTodo(todos),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -57,7 +63,7 @@ class _AddTodoDialogWidgetState extends State<AddTodoDialogWidget> {
           ],
         ),
       );
-  void addTodo() {
+  void addTodo(TodosProvider todos) {
     final isValidate = _formKey.currentState.validate();
 
     if (!isValidate) {
@@ -69,8 +75,9 @@ class _AddTodoDialogWidgetState extends State<AddTodoDialogWidget> {
           id: DateTime.now().toString(),
           description: description);
 
-      final provider = Provider.of<TodosProvider>(context, listen: false);
-      provider.addTodo(todo);
+      todos.addTodo(todo);
+      // final provider = Provider.of<TodosProvider>(context, listen: false);
+      // provider.addTodo(todo);
 
       Navigator.of(context).pop();
     }

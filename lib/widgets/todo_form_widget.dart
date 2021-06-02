@@ -21,7 +21,7 @@ class TodoFormWidget extends StatefulWidget {
 }
 
 class _TodoFormWidgetState extends State<TodoFormWidget> {
-  final textController = TextEditingController();
+  TextEditingController textController = TextEditingController();
 
   @override
   void initState() {
